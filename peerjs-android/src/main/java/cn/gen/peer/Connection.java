@@ -332,6 +332,7 @@ public class Connection implements PeerConnection.Observer, DataChannel.Observer
     public void onCandidate(JSONObject payload) {
         try {
             JSONObject candidate = payload.getJSONObject("candidate");
+            System.out.println("==============================> candidate Call Press: " + clientId);
             peerConnection.addIceCandidate(new IceCandidate(
                     candidate.getString("sdpMid"),
                     candidate.getInt("sdpMLineIndex"),

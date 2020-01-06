@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 
 import cn.gen.peer.Connection;
@@ -70,18 +69,8 @@ public class MainActivity extends Activity implements Connection.OnConnectionEve
         surfaceHolder.addCallback(this);
         surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
-
     }
 
-
-
-    public byte[] getBytesFromBitmap() {
-        Bitmap icon = BitmapFactory.decodeResource(MainActivity.this.getResources(),
-                R.drawable.ic_launcher_background);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        icon.compress(Bitmap.CompressFormat.JPEG, 70, stream);
-        return stream.toByteArray();
-    }
 
     private void start_camera() {
         try{
@@ -106,6 +95,15 @@ public class MainActivity extends Activity implements Connection.OnConnectionEve
     }
 
 
+    private byte[] getByte(){
+        Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.download);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        bitmap.recycle();
+        return byteArray;
+    }
+
 
     private void setOnClick() {
 
@@ -114,7 +112,7 @@ public class MainActivity extends Activity implements Connection.OnConnectionEve
             public void onClick(View view) {
                 PackData data = new PackData();
                 try {
-                    data.add(getBytesFromBitmap());
+                    data.put("video", getByte());
                 } catch (PackData.PackException e) {
                     e.printStackTrace();
                 }
@@ -187,6 +185,7 @@ public class MainActivity extends Activity implements Connection.OnConnectionEve
                     PackData pd = new PackData();
                     try {
                         pd.put("text", text);
+                        pd.put("from", "luong");
                     } catch (PackData.PackException e) {
                         e.printStackTrace();
                     }
@@ -218,7 +217,8 @@ public class MainActivity extends Activity implements Connection.OnConnectionEve
 
     @Override
     public void onMessage(Connection connection, PackData data) {
-        System.out.println("==================== CO MESSAGES" + data.get("text").toString());
+        System.out.println("==================== CO MESSAGES: "  + data.get("text").toString() + " Từ: " + data.get("from").toString());
+        System.out.println("==================== CO MESSAGES: "  + data.get().toString());
     }
 
     @Override
